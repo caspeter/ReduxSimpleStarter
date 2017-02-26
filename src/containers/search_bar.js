@@ -1,6 +1,9 @@
 import React , { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { fetchWeather } from '../actions/index';
 
-export default class SearchBar extends Component {
+export class SearchBar extends Component {
   constructor(props) {
     super(props);
 
@@ -8,10 +11,11 @@ export default class SearchBar extends Component {
 
 //Says that take the existing function and bind it to this.onInputChange and replace the existing function with it
     this.onInputChange = this.onInputChange.bind(this);
+    this.onFormSubmit = this.onFormSubmit.bind(this);
   }
 
   onInputChange(event) {
-    console.log(event.target.value);
+    // console.log(event.target.value);
     this.setState({ term: event.target.value })
   }
 
@@ -19,6 +23,9 @@ export default class SearchBar extends Component {
     event.preventDefault();
 
     //we need to go an fetch weather data
+    this.props.fetchWeather(this.state.term);
+    //empty the string
+    this.setState({term: ''});
   }
 
   render() {
@@ -36,3 +43,9 @@ export default class SearchBar extends Component {
     );
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({fetchWeather}, dispatch)
+}
+
+export default connect(null, mapDispatchToProps)(SearchBar)
